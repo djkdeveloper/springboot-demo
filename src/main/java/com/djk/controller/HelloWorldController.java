@@ -4,6 +4,7 @@ import com.djk.annotation.NeedIntercept;
 import com.djk.bean.BaseResponse;
 import com.djk.service.HellWorldService;
 import com.djk.utils.MessageSourceUtil;
+import com.djk.utils.RedisMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class HelloWorldController {
     @ApiOperation("测试接口1")
     @RequestMapping(value = "/test/{name}", method = RequestMethod.GET)
     public ResponseEntity<BaseResponse> test(@PathVariable(value = "name") String name) {
+
+        RedisMap.put("a","djk");
+
         return ResponseEntity.ok(new BaseResponse<String>(true, MessageSourceUtil.getMessage("0000"),
                 hellWorldService.sayHello(name)));
     }

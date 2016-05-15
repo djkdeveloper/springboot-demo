@@ -9,3 +9,5 @@
 4：加入swagger
 5：加入activemq支持
 6：自動配置
+7:加入redis
+8：定时任务

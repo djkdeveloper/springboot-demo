@@ -9,4 +9,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "djk.redis")
 public class RedisProperties {
+
+    /**
+     * 是否使用标识
+     */
+    private String useFlag;
+
+    public String getUseFlag() {
+        return useFlag;
+    }
+
+    public void setUseFlag(String useFlag) {
+        this.useFlag = useFlag;
+    }
+
+    /**
+     * 是否使用redis
+     *
+     * @return
+     */
+    public boolean isUseRedis() {
+        return "true".equalsIgnoreCase(useFlag) ? true : false;
+    }
+
 }

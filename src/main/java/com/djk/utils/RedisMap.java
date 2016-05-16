@@ -68,14 +68,13 @@ public class RedisMap {
         }
 
         try {
-            return redisTemplate.execute(new RedisCallback<Boolean>() {
-                @Override
-                public Boolean doInRedis(RedisConnection connection)
-                        throws DataAccessException {
-                    connection.set(redisTemplate.getStringSerializer().serialize(key), new JdkSerializationRedisSerializer().serialize(value));
-                    return true;
-                }
-            });
+
+            RedisCallback<Boolean> redisCallback = connection -> {
+                connection.set(redisTemplate.getStringSerializer().serialize(key), new JdkSerializationRedisSerializer().serialize(value));
+                return true;
+            };
+
+            return redisTemplate.execute(redisCallback);
         } catch (Exception e) {
             LOGGER.error("Put value to redis fail...", e);
         }
@@ -89,17 +88,15 @@ public class RedisMap {
     public static Object get(final String key) {
         // 如果redis 不需要 则直接返回
         if (!isNeedRedis) {
-            LOGGER.info("Do not need use redis :{}", isNeedRedis);
+
             return null;
         }
 
         try {
-            return redisTemplate.execute(new RedisCallback<Object>() {
-                @Override
-                public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                    return new JdkSerializationRedisSerializer().deserialize(connection.get(redisTemplate.getStringSerializer().serialize(key)));
-                }
-            });
+
+            RedisCallback<Object> redisCallback = connection ->
+                    new JdkSerializationRedisSerializer().deserialize(connection.get(redisTemplate.getStringSerializer().serialize(key)));
+            return redisTemplate.execute(redisCallback);
         } catch (Exception e) {
             LOGGER.error("Get value from  redis fail...", e);
         }
